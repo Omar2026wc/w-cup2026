@@ -1008,7 +1008,12 @@ console.log("players", players);
 console.log("adminAct", adminAct);
 console.log("preds", preds);
   var el=document.getElementById('lbEl');
-
+console.log({
+  playersCount: players.length,
+  predsKeys: Object.keys(preds || {}).length,
+  actualLoaded: !!adminAct,
+  actualGroups: adminAct && adminAct.groups ? Object.keys(adminAct.groups).length : 0
+});
   if(!players.length){
     el.innerHTML='';
     return;
