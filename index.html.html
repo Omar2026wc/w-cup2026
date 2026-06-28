@@ -989,7 +989,17 @@ function calcScorePred(pr){
 
   return pts;
 }
+function calcScore(playerName){
 
+    if(!preds) return 0;
+
+    var pr = preds[playerName];
+
+    if(!pr) return 0;
+
+    return calcScorePred(pr);
+
+}
 function renderAll(){ renderTags(); renderTabs(); renderLb(); renderSecs(); }
 
 function renderTags(){
@@ -1054,7 +1064,11 @@ console.log({
 
     return {
       n:p,
-      s:calcScore(p)
+  s:(function(){
+    var score = calcScore(p);
+    console.log(p, score, preds[p]);
+    return score;
+})()
     };
 
   }).sort(function(a,b){
