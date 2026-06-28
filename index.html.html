@@ -515,29 +515,60 @@ function showPred(grp){
   document.getElementById('S_ADMIN').style.display='none';
   document.getElementById('S_PRED').style.display='';
   document.getElementById('S_SUCCESS').style.display='none';
-  document.getElementById('btnHome').style.display='none'; // المشارك لا يرى زر الرئيسية
-  document.getElementById('btnAdmin').style.display='none'; // المشارك لا يرى زر الإدارة
+  document.getElementById('btnHome').style.display='none';
+  document.getElementById('btnAdmin').style.display='none';
+
   var pill=document.getElementById('grpPill');
-  pill.textContent=grp.icon+' '+grp.name; pill.style.display='';
-  document.getElementById('hSub').textContent=grp.icon+' '+grp.name+(grp.desc?' · '+grp.desc:'');
-  var url=new URL(location.href); url.searchParams.set('g',grp.id||curGid);
+  pill.textContent=grp.icon+' '+grp.name;
+  pill.style.display='';
+
+  document.getElementById('hSub').textContent=
+      grp.icon+' '+grp.name+(grp.desc?' · '+grp.desc:'');
+
+  var url=new URL(location.href);
+  url.searchParams.set('g',grp.id||curGid);
   history.replaceState(null,'',url);
+
   document.getElementById('bannLocked').style.display='none';
   document.getElementById('bannWarn').style.display='none';
   document.getElementById('submitBar').style.display='none';
-  if(isPast()) document.getElementById('bannLocked').style.display='';
-  else if(DEADLINE-new Date()<86400000) document.getElementById('bannWarn').style.display='';
+
+  if(isPast())
+      document.getElementById('bannLocked').style.display='';
+  else if(DEADLINE-new Date()<86400000)
+      document.getElementById('bannWarn').style.display='';
+
   if(liveGrpPath) fbOff(liveGrpPath);
   liveGrpPath='grpdata/'+(grp.id||curGid);
-  fbLive(liveGrpPath, function(data){
-    players=(data&&data.players)?data.players.filter(function(p){return p;}):[];
-    preds=(data&&data.preds)?data.preds:{};
-    if(activeP&&!players.includes(activeP)) activeP=null;
-    document.getElementById('mainContent').style.display=activeP?'':'none';
-    if(activeP&&!isPast()) document.getElementById('submitBar').style.display='';
-    // تحميل النتائج الفعلية من Firebase
-    fbGet('actual').then(function(ac){ adminAct=ac||newPred(); renderAll(); });
+
+  // الاستماع لبيانات المشاركين
+  fbLive(liveGrpPath,function(data){
+
+      players=(data&&data.players)?data.players.filter(Boolean):[];
+      preds=(data&&data.preds)?data.preds:{};
+
+      if(activeP && !players.includes(activeP))
+          activeP=null;
+
+      document.getElementById('mainContent').style.display=
+          activeP ? '' : 'none';
+
+      if(activeP && !isPast())
+          document.getElementById('submitBar').style.display='';
+
+      renderAll();
+
   });
+
+  // الاستماع للنتائج الفعلية بشكل مستقل
+  fbLive('actual',function(ac){
+
+      adminAct = ac || newPred();
+
+      renderAll();
+
+  });
+
 }
 
 // ═══════════════════════════════════════════════
