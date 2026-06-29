@@ -559,7 +559,13 @@ function showPred(grp){
       renderAll();
 
   });
+fbLive('actual', function(v){
 
+    adminAct = v || newPred();
+
+    renderAll();
+
+});
   // الاستماع للنتائج الفعلية بشكل مستقل
   fbLive('actual',function(ac){
 
