@@ -502,10 +502,17 @@ function showAdmin(){
   document.getElementById('grpPill').style.display='none';
   document.getElementById('hSub').textContent='⚙️ لوحة إدارة المجموعات';
 
-  fbGet('actual').then(function(v){
-    adminAct=v || newPred();
+fbGet('actual').then(function(v){
+
+    console.log("ACTUAL RAW:", v);
+
+    adminAct = v || newPred();
+
+    console.log("ACTUAL GROUPS:", adminAct.groups);
+
     renderActualForm();
-  });
+
+});
 
   renderGrpList();
   buildQuickBtns();
